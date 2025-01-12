@@ -1,42 +1,36 @@
 <template>
-
-
-  <nav class="bg-white border-gray-200 dark:bg-gray-900">
+  <nav class="bg-primary fixed w-full z-20 top-0 start-0 ">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-      <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
-        <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo"/>
-        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
-      </a>
-      <button data-collapse-toggle="navbar-default" type="button"
-              class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-              aria-controls="navbar-default" aria-expanded="false">
-        <span class="sr-only">Open main menu</span>
-        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-        </svg>
-      </button>
-      <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-        <ul
-          class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+      <router-link to="/">
+        <fwb-img
+          :alt="logo.alt"
+          :src="logo.src"
+          class="w-14"
+        />
+      </router-link>
 
-          <li>
-            <RouterLink to="/" class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/about"
-               class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">About</RouterLink>
-          </li>
-          <li>
-            <a href="#"
-               class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Services</a>
-          </li>
-          <li>
-            <a href="#"
-               class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Pricing</a>
-          </li>
-          <li>
-            <a href="#"
-               class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Contact</a>
+      <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse bg-accent rounded">
+        <button
+          @click="isMenuOpen = !isMenuOpen"
+          type="button"
+          class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden focus:outline-none focus:ring-2"
+          aria-controls="navbar-hamburger"
+          aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          </svg>
+        </button>
+      </div>
+
+      <div :class="{ hidden: !isMenuOpen, 'flex flex-col items-center justify-between w-full md:flex md:w-auto md:order-1': true}" id="navbar-hamburger">
+        <ul
+          class="flex flex-col w-full md:p-0 font-medium  md:space-x-12 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+          <li
+            v-for="navItem in navItems" :key="navItem.title" class="w-full text-center text-white hover:text-accent">
+            <router-link :to="navItem.url" :class="navItem.isSelected ? navItem.selectedClass : navItem.defaultClass" @click="isMenuOpen = false">
+              {{ navItem.title }}
+            </router-link>
           </li>
         </ul>
       </div>
@@ -45,6 +39,59 @@
 </template>
 
 <script setup lang="ts">
+import {ref, watch} from "vue";
+import {useRoute} from "vue-router";
+import logo_img from '@/assets/logo/logo_img.png';
+import {FwbImg} from "flowbite-vue";
 
-import {RouterLink} from "vue-router";
+const logo: { src: string, alt: string } = {src: logo_img, alt: 'Logo'};
+
+const route = useRoute();
+const isMenuOpen = ref(false);
+
+const navItemClass: string =
+  "block py-2 px-4 md:hover:bg-transparent md:hover:text-sec md:p-0 md:dark:hover:bg-transparent  whitespace-nowrap";
+const navItenSelectedClass: string =
+  navItemClass + " font-extrabold text-orange-400  border-t-2 md:border-t-0 border-b-2 border-accent";
+
+const navItems = ref([
+  {
+    title: "Accueil",
+    url: "/",
+    defaultClass: navItemClass,
+    selectedClass: navItenSelectedClass,
+    isSelected: ref(false),
+  },
+  {
+    title: "Services",
+    url: "/services",
+    defaultClass: navItemClass,
+    selectedClass: navItenSelectedClass,
+    isSelected: ref(false),
+  },
+  {
+    title: "À Propos",
+    url: "/about",
+    defaultClass: navItemClass,
+    selectedClass: navItenSelectedClass,
+    isSelected: ref(false),
+  },
+  {
+    title: "Nous Joindre",
+    url: "/contact",
+    defaultClass: navItemClass,
+    selectedClass: navItenSelectedClass,
+    isSelected: ref(false),
+  },
+]);
+
+watch(
+  () => route.path,
+  () => {
+    navItems.value.forEach((navItem) => {
+      navItem.isSelected = route.path === navItem.url;
+    });
+  },
+  {immediate: true}
+);
 </script>

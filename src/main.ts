@@ -1,5 +1,6 @@
 import './assets/style/main.css'
 import './assets/style/input.css'
+import 'leaflet/dist/leaflet.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
