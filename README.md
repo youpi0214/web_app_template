@@ -22,7 +22,7 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 npm install
 ```
 
-### Compile and reload tailwindcss
+### Compile and Hot-Reload tailwindcss
 
 ```sh
 npx tailwindcss -i ./src/assets/style/input.css -o ./src/assets/style/output.css --watch
@@ -45,3 +45,7 @@ npm run build
 ```sh
 npm run lint
 ```
+
+## Quick Peak At The Super Basic UI
+
+![screenshot.png](readme_resource/screenshot.png)
