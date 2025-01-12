@@ -48,4 +48,4 @@ npm run lint
 
 ## Quick Peak At The Super Basic UI
 
-![screenshot.png](readme_resource/screenshot.png)
+![screenshot.png](readme_resource/ui_screenshot.png)
